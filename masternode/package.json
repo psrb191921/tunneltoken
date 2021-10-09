@@ -1,0 +1,21 @@
+{
+  "name": "masternode",
+  "version": "0.0.1",
+  "description": "TunnelToken Master Node",
+  "main": "masternode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psrb191921/tunneltoken.git"
+  },
+  "keywords": [
+    "tunneltoken"
+  ],
+  "author": "psrb191921",
+  "bugs": {
+    "url": "https://github.com/psrb191921/tunneltoken/issues"
+  },
+  "homepage": "https://github.com/psrb191921/tunneltoken#readme"
+}
