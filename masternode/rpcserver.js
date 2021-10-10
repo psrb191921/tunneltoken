@@ -1,32 +1,33 @@
 const http = require("http");
+const URL = require("url").URL;
 
 class RPCServer {
 	constructor(ip = "0.0.0.0", port = 5555, server) {
 		this.ip = ip;
 		this.port = port;
 		this.server = server;
-		this.rpcHandlers = {};
+		this.handlers = {};
 		return;
 	}
 
-	addRpcHandler(path, handler) {
-		this.rpcHandlers[path] = handler;
+	addHandler(path, handler) {
+		this.handlers[path] = handler;
 		return;
 	}
 
-	getRpcHandler(path) {
-		return this.rpcHandlers[path];
+	getHandler(path) {
+		return this.handlers[path];
 	}
 
-	setupRpcHandlers() {
-		this.addRpcHandler("/info", this.onRpcInfo);
-		this.addRpcHandler("/register", this.onRpcRegister);
+	setupHandlers() {
+		this.addHandler("/info", this.onInfo.bind(this));
+		this.addHandler("/register", this.onRegister.bind(this));
 		return;
 	}
 
-	createRpcServer() {
+	createServer() {
 		let server = http.createServer(
-			this.onRpcRequest.bind(this)
+			this.onRequest.bind(this)
 		);
 		server.listen(
 			this.port
@@ -35,20 +36,29 @@ class RPCServer {
 	}
 
 	start() {
-		this.setupRpcHandlers();
-		this.rpcServer = this.createRpcServer();
+		this.setupHandlers();
+		this.rpcServer = this.createServer();
 		return;
 	}
 
-	onRpcRequest(request, response) {
+	onRequest(request, response) {
 		try {
-			let handler = this.getRpcHandler(request.url);
+			let url = new URL(
+				request.url,
+				"http://" + this.ip + ":" + this.port
+			);
+			let handler = this.getHandler(url.pathname);
 			if (!handler) {
 				throw { "error": "nosuchhandler" };
 			}
+			let query = Object.fromEntries(
+				url.searchParams.entries()
+			);
 			response.end(
 				JSON.stringify(
-					handler(request)
+					handler(
+						query
+					)
 				)
 			);
 		}
@@ -60,12 +70,16 @@ class RPCServer {
 		return;
 	}
 
-	onRpcInfo(request) {
-		return this.server.getInfo();
+	onInfo(query) {
+		return this.server.getInfo(
+			query
+		);
 	}
 
-	onRpcRegister(request) {
-		return this.server.addNode();
+	onRegister(query) {
+		return this.server.addNode(
+			query
+		);
 	}
 }
 
