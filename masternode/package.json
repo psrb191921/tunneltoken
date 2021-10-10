@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/psrb191921/tunneltoken/issues"
   },
-  "homepage": "https://github.com/psrb191921/tunneltoken#readme"
+  "homepage": "https://github.com/psrb191921/tunneltoken#readme",
+  "dependencies": {
+    "@solana/web3.js": "^1.29.2"
+  }
 }
