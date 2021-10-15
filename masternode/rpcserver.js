@@ -2,10 +2,10 @@ const http = require("http");
 const URL = require("url").URL;
 
 class RPCServer {
-	constructor(ip = "0.0.0.0", port = 5555, server) {
-		this.ip = ip;
+	constructor(host = "0.0.0.0", port = 5555, masterNode) {
+		this.host = host;
 		this.port = port;
-		this.server = server;
+		this.masterNode = masterNode;
 		this.handlers = {};
 		return;
 	}
@@ -37,7 +37,7 @@ class RPCServer {
 
 	start() {
 		this.setupHandlers();
-		this.rpcServer = this.createServer();
+		this.server = this.createServer();
 		return;
 	}
 
@@ -45,7 +45,7 @@ class RPCServer {
 		try {
 			let url = new URL(
 				request.url,
-				"http://" + this.ip + ":" + this.port
+				"http://" + this.host + ":" + this.port
 			);
 			let handler = this.getHandler(url.pathname);
 			if (!handler) {

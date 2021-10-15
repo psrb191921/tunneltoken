@@ -1,10 +1,12 @@
 const RPCServer = require("./rpcserver.js").RPCServer;
+const ProxyServer = require("./proxyserver.js").ProxyServer;
 
 class MasterNode {
-	constructor(ip = "0.0.0.0", rpcPort = 5555) {
-		this.ip = ip;
+	constructor(host = "0.0.0.0", rpcPort = 5555) {
+		this.host = host;
 		this.rpcPort = rpcPort;
-		this.rpcServer = new RPCServer(ip, rpcPort, this);
+		this.rpcServer = new RPCServer(host, rpcPort, this);
+		this.proxyServer = new ProxyServer(host, rpcPort, this);
 		this.masterNodes = {};
 		this.nodes = {};
 		return;
@@ -12,6 +14,7 @@ class MasterNode {
 
 	start() {
 		this.rpcServer.start();
+		this.proxyServer.start();
 		return;
 	}
 
