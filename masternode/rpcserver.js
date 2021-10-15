@@ -25,19 +25,26 @@ class RPCServer {
 		return;
 	}
 
-	createServer() {
+	createServer(host, port, handler) {
 		let server = http.createServer(
-			this.onRequest.bind(this)
+			handler
 		);
 		server.listen(
-			this.port
+			{
+				"host": host,
+				"port": port
+			}
 		);
 		return server;
 	}
 
 	start() {
 		this.setupHandlers();
-		this.server = this.createServer();
+		this.server = this.createServer(
+			this.host,
+			this.port,
+			this.onRequest.bind(this)
+		);
 		return;
 	}
 

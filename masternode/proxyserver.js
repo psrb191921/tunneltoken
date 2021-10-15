@@ -1,4 +1,5 @@
 const net = require("net");
+const Node = require("./node.js").Node;
 
 class ProxyServer {
 	constructor(host = "0.0.0.0", nodePort = 6666, clientPort = 7777, masterNode) {
@@ -6,6 +7,7 @@ class ProxyServer {
 		this.nodePort = nodePort;
 		this.clientPort = clientPort;
 		this.masterNode = masterNode;
+		this.nodes = {};
 		return;
 	}
 
@@ -14,8 +16,10 @@ class ProxyServer {
 			connectionsHandler
 		);
 		server.listen(
-			port,
-			host
+			{
+				"host": host,
+				"port": port
+			}
 		);
 		return server;
 	}
@@ -35,6 +39,7 @@ class ProxyServer {
 	}
 
 	onNodeConnection(socket) {
+		(new Node(socket)).start();
 		return;
 	}
 
